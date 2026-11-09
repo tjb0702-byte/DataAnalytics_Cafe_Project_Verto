@@ -1,0 +1,457 @@
+%% =====================================================================
+%%  Prague Cafe Project -- Location topic
+%%  Built from the course template. Replace every red "Your words" prompt
+%%  with your own text, then delete the prompt.
+%%  Tables and figures come from the R scripts in ../analysis.
+%% =====================================================================
+\documentclass[11pt,a4paper]{article}
+\usepackage{cafestyle}
+
+% Include an R-exported table if it exists, shrinking it only if it is wider than the page.
+\newsavebox{\tablebox}
+\newcommand{\inputtable}[1]{\IfFileExists{#1}{\sbox{\tablebox}{\input{#1}}\ifdim\wd\tablebox>\linewidth\resizebox{\linewidth}{!}{\usebox{\tablebox}}\else\usebox{\tablebox}\fi}{\par\noindent\fbox{\parbox{0.9\linewidth}{\centering Missing table file: \texttt{\detokenize{#1}}}}\par}}
+\newcommand{\inputfigure}[2][0.85]{\IfFileExists{#2}{\includegraphics[width=#1\linewidth]{#2}}{\fbox{\parbox{0.8\linewidth}{\centering Missing figure file: \texttt{\detokenize{#2}}}}}}
+
+% A visible reminder of what still has to be written in your own words.
+\newcommand{\yourwords}[1]{\par\medskip\noindent\textcolor{red!70!black}{\textbf{[Your words:} #1\textbf{]}}\par\medskip}
+
+\title{\textbf{\textcolor{red!70!black}{[Your title: what you asked and what you found]}}}
+\author{Tyler Bannon\\[0.3ex]\small Data Analytics, Topic: Location\\[0.3ex]\small \textcolor{red!70!black}{[Team members, if any]}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent\yourwords{About 100 words. The outcome (where cafes are and how busy they are), the sample size, the analyses you cover, and the two or three main results with effect sizes in km or ratings. Nothing that is not in the text below.}
+\end{abstract}
+
+\section{Introduction}
+\yourwords{Two or three sentences on why a cafe's popularity might depend on where it is, and how this topic is one chapter of the wider story about the Prague cafe market. State the research questions in plain words. Do not describe methods here.}
+
+\section{Data and methods}
+
+\subsection{Data}
+\yourwords{Where the data come from and how they were collected. Then list every cleaning choice and how many cafes it affected. The facts are: 299 rows in the raw file; 99 empty rows removed, leaving 200; 11 cafes entered twice, keeping the row entered first, leaving 189; about 15 spellings of 9 districts harmonised; 5 cafes moved to the district their address shows (sheet rows 37, 39, 43, 44, 144); one blank cafe type set to missing (row 136); Paul (row 113) recoded as an international chain; thousands commas removed from the number of ratings; Cafe Fiesta (row 85) kept with 0 ratings; latitude and longitude taken from the coordinates cell because the two disagree in row 39. Say which variables have missing values (see Table~\ref{tab:desc}) and explain why you made each choice. Add a sentence on how a different choice could change the results.}
+
+\subsection{Statistical methods}
+\yourwords{One short paragraph. State the significance level (.05); which test you used for each question and why (use Table~\ref{tab:decision}: the shape of the distribution and the size of the smallest group); that a one-tailed alternative is used only where the question names a direction (A2, A3, A5); the robust HC3 standard errors in A7 to A9 and why; the bootstrap settings (5,000 resamples, seed 123, percentile intervals); the Holm adjustment in A4; and the software (see Appendix~\ref{app:repro}).}
+
+\section{Results}
+
+\yourwords{One or two sentences that lead the reader through the story, then refer to Table~\ref{tab:summary}.}
+
+\begin{table}[ht]
+\centering
+\caption{Main results of all ten analyses. CI is the 95\% confidence interval, two-sided even for one-tailed tests. The statistic is $t$ for A1, A3 and A7 to A9, $W$ for A2, $H$ for A4, $S$ for A6 and $z$ for A10; Fisher's test in A5 has no test statistic. pp = percentage points.}
+\label{tab:summary}
+\inputtable{tables/summary.tex}
+\end{table}
+
+%% -------------------------------------------------------------------
+\subsection{A1: Average distance from the Orloj}
+Is the average distance of caf\'es from the Orloj different from 2\,km?
+
+\noindent\Ho: the mean distance of caf\'es from the Orloj equals 2\,km. \Hone: the mean distance of caf\'es from the Orloj is different from 2\,km (two-tailed, fixed in advance).
+
+\begin{table}[ht]
+\centering
+\caption{One-sample $t$-test of the distance from the Orloj against 2\,km. CI is the 95\% confidence interval of the mean.}
+\label{tab:a1}
+\inputtable{tables/A1_table.tex}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\inputfigure{figures/A1_figure.pdf}
+\caption{Distance from the Orloj in km. Grey points are individual caf\'es, the blue point and bars are the mean and its 95\% confidence interval, and the dashed line is the 2\,km benchmark. The sample size is in Table~\ref{tab:a1}.}
+\label{fig:a1}
+\end{figure}
+
+% Macros: \meanci{mean}{lower}{upper}{km}, \tstat{df}{value}, \pval{.xxx} or \plt{.001}
+\yourwords{Estimate with its interval and sample size, Cohen's $d$, then $t(df)$ and the exact $p$. One sentence in km: what the result means, and whether a gap of this size matters in practice. Why is a median worth giving next to the mean here?}
+
+%% -------------------------------------------------------------------
+\subsection{A2: Roasteries and other caf\'es}
+Are roasteries farther from the Orloj than other caf\'es?
+
+\noindent\Ho: the mean distance from the Orloj is the same for roasteries and other caf\'es. \Hone: the mean distance from the Orloj is greater for roasteries than for other caf\'es (one-tailed, fixed in advance). Because the descriptive analysis calls for a rank test, these are read as statements about the typical distance.
+
+\begin{table}[ht]
+\centering
+\caption{Wilcoxon rank-sum test of the distance from the Orloj, roasteries minus other caf\'es. The difference is the Hodges--Lehmann estimate with its two-sided 95\% confidence interval, and the $p$-value is one-tailed and was fixed in advance.}
+\label{tab:a2}
+\inputtable{tables/A2_table.tex}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\inputfigure{figures/A2_figure.pdf}
+\caption{Distance from the Orloj in km for roasteries and other caf\'es. Grey points are individual caf\'es, and the blue points and bars are the medians with bootstrapped 95\% confidence intervals (5,000 resamples, seed 123). Group sizes are in Table~\ref{tab:a2}.}
+\label{fig:a2}
+\end{figure}
+
+\yourwords{State the direction of the subtraction in words. Give the difference with its interval, then $W$ and the one-tailed $p$. Explain what it means that the $p$-value is one-tailed while the interval is two-sided, and what the two together let you claim. Mention the Levene check and the dependence of caf\'es in the same district.}
+
+%% -------------------------------------------------------------------
+\subsection{A3: East--west and north--south spread}
+Are caf\'es spread farther east--west than north--south from the Orloj?
+
+\noindent\Ho: the mean of the absolute east--west km minus the absolute north--south km equals 0. \Hone: this mean is greater than 0 (one-tailed, fixed in advance).
+
+\begin{table}[ht]
+\centering
+\caption{Paired $t$-test of the absolute east--west distance minus the absolute north--south distance from the Orloj, in km. The interval is two-sided, and the $p$-value is one-tailed and was fixed in advance.}
+\label{tab:a3}
+\inputtable{tables/A3_table.tex}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\inputfigure{figures/A3_figure.pdf}
+\caption{Within-caf\'e differences between the absolute east--west and north--south distance from the Orloj, in km. Grey points are individual caf\'es, the blue point and bars are the mean difference and its 95\% confidence interval, and the dashed line marks no difference. The sample size is in Table~\ref{tab:a3}.}
+\label{fig:a3}
+\end{figure}
+
+\yourwords{State the direction of the subtraction in words. Mean difference with its interval, $d_z$, then $t(df)$ and the one-tailed $p$. One sentence in km.}
+
+%% -------------------------------------------------------------------
+\subsection{A4: Distance by caf\'e type}
+Does the distance from the Orloj differ by caf\'e type (independent, local chain, international chain), and if so, how?
+
+\noindent\Ho: the mean distance from the Orloj is the same for all three caf\'e types. \Hone: the mean distance of at least one caf\'e type differs from another (no direction, fixed in advance). Because the descriptive analysis calls for a rank test, these are read as statements about the typical distance.
+
+\begin{table}[ht]
+\centering
+\caption{Kruskal--Wallis test of the distance from the Orloj across the three caf\'e types. Group medians and pairwise comparisons are in Tables~\ref{tab:a4groups} and~\ref{tab:a4pairs}.}
+\label{tab:a4}
+\inputtable{tables/A4_table.tex}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\inputfigure{figures/A4_figure.pdf}
+\caption{Distance from the Orloj in km by caf\'e type. Grey points are individual caf\'es, and the blue points and bars are the medians with bootstrapped 95\% confidence intervals (5,000 resamples, seed 123). Group sizes are in Table~\ref{tab:a4groups}.}
+\label{fig:groups}
+\end{figure}
+
+\yourwords{$H(df)$ and the exact $p$. Say whether the pairwise comparisons should be read at all, given this result (they are in Appendix~\ref{app:robust}). Comment on how much can be said about international chains with so few of them.}
+
+%% -------------------------------------------------------------------
+\subsection{A5: International chains and Prague 1}
+Is an international chain more likely to be in Prague 1 than other caf\'e types, and if so, by how many percentage points?
+
+\noindent\Ho: the share of caf\'es in Prague 1 is the same for international chains and other caf\'e types. \Hone: the share of caf\'es in Prague 1 is higher for international chains than for other caf\'e types (one-tailed, fixed in advance).
+
+\begin{table}[ht]
+\centering
+\caption{Counts and row percentages of caf\'es in Prague 1 by caf\'e type.}
+\label{tab:a5counts}
+\inputtable{tables/A5_counts.tex}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Fisher's exact test of international chains and Prague 1. The difference is in percentage points (international chains minus the rest). The intervals are two-sided, and the $p$-value is one-tailed and was fixed in advance.}
+\label{tab:a5}
+\inputtable{tables/A5_table.tex}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\inputfigure{figures/A5_figure.pdf}
+\caption{Percent of caf\'es located in Prague 1 for international chains and other caf\'e types, with 95\% confidence intervals and the underlying counts.}
+\label{fig:a5}
+\end{figure}
+
+\yourwords{Counts and percentages, the difference in percentage points with its interval, the smallest expected count and why it leads to Fisher's test, Cram\'er's $V$, then the odds ratio with its interval and the one-tailed $p$. The percentage-point interval and the odds-ratio interval may tell different stories: explain which you trust and why, given how few international chains there are.}
+
+%% -------------------------------------------------------------------
+\subsection{A6: Number of ratings and distance}
+Is the number of Google ratings correlated with the distance from the Orloj, and if so, in which direction and how strongly?
+
+\noindent\Ho: the population correlation between the number of ratings and distance equals 0. \Hone: it is not 0 (two-tailed, fixed in advance).
+
+\begin{table}[ht]
+\centering
+\caption{Spearman correlation between the number of Google ratings and the distance from the Orloj, with a bootstrapped 95\% confidence interval (5,000 resamples, seed 123).}
+\label{tab:a6}
+\inputtable{tables/A6_table.tex}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\inputfigure{figures/A6_figure.pdf}
+\caption{Number of Google ratings plus one (log scale) against the distance from the Orloj in km. Each point is one caf\'e. The title gives Spearman's $\rho$ and its bootstrapped 95\% confidence interval. The sample size is in Table~\ref{tab:a6}.}
+\label{fig:a6}
+\end{figure}
+
+\yourwords{$\rho$ with its interval and $n$, the share of shared variance, the exact $p$. Direction and strength in plain words. Do not suggest a cause.}
+
+%% -------------------------------------------------------------------
+\subsection{A7: Ratings per km}
+By how many ratings does the number of Google ratings change per km from the Orloj?
+
+\noindent\Ho: the slope of the number of ratings on distance equals 0 ratings per km. \Hone: the slope is not 0 (two-tailed, fixed in advance).
+
+\begin{table}[ht]
+\centering
+\caption{Linear regression of the number of Google ratings on the distance from the Orloj in km, with robust (HC3) standard errors and 95\% confidence intervals.}
+\label{tab:a7}
+\inputtable{tables/A7_table.tex}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\inputfigure{figures/A7_figure.pdf}
+\caption{Number of Google ratings against the distance from the Orloj in km. Each point is one caf\'e, and the blue line is the regression line with its 95\% confidence band. The sample size is in Table~\ref{tab:a7}.}
+\label{fig:a7}
+\end{figure}
+
+\yourwords{The slope in ratings per km with its robust interval, $R^2$, the exact $p$. What the residual plots show (Figure~\ref{fig:a7diag}). Name the influential caf\'es (Table~\ref{tab:a7infl}) and say how the slope changes without them (Table~\ref{tab:a7sens}). Is a straight line in raw ratings a good description of these data?}
+
+%% -------------------------------------------------------------------
+\subsection{A8: Accounting for seats inside}
+Does the link between distance from the Orloj and the number of ratings hold once you account for the number of seats inside, and if so, how much of it remains?
+
+\noindent\Ho: holding seats inside constant, the slope of the number of ratings on distance equals 0. \Hone: holding seats inside constant, the slope is not 0 (two-tailed, fixed in advance).
+
+\begin{table}[ht]
+\centering
+\caption{Regressions of the number of Google ratings with and without seats inside, on the same caf\'es, with robust (HC3) standard errors and 95\% confidence intervals.}
+\label{tab:reg}
+\inputtable{tables/A8_table.tex}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Slope of distance in ratings per km before and after adding seats inside, the percent of the slope that remains, the nested $F$-test for adding seats, and the variance inflation factor of distance.}
+\label{tab:a8comp}
+\inputtable{tables/A8_comparison.tex}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\inputfigure{figures/A8_figure.pdf}
+\caption{Slope of distance in ratings per km, without and with seats inside in the model, with robust 95\% confidence intervals. The dashed line marks no association. The caf\'es behind each slope are shown in Figure~\ref{fig:a8partial}.}
+\label{fig:a8}
+\end{figure}
+
+\yourwords{The slope before and after, how much remains, and whether it is still different from zero. The nested $F$-test and the variance inflation factor. Compare what the $F$-test and the robust $t$-test say about seats, and explain why they could differ (Table~\ref{tab:a8sens} and Figure~\ref{fig:a8diag} will help).}
+
+%% -------------------------------------------------------------------
+\subsection{A9: East and west of the Orloj}
+Does the relationship between distance from the Orloj and the number of ratings differ between caf\'es east and west of the Orloj, and if so, how?
+
+\noindent\Ho: the slope of the number of ratings on distance is the same east and west of the Orloj (the interaction is 0). \Hone: the slope differs between east and west (two-tailed, fixed in advance).
+
+\begin{table}[ht]
+\centering
+\caption{Regression of the number of Google ratings on distance, side of the Orloj (1 = east) and their interaction, with robust (HC3) standard errors and 95\% confidence intervals.}
+\label{tab:a9}
+\inputtable{tables/A9_table.tex}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Slope of distance in ratings per km on each side of the Orloj, calculated from the coefficients in Table~\ref{tab:a9}.}
+\label{tab:a9slopes}
+\inputtable{tables/A9_slopes.tex}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\inputfigure{figures/A9_figure.pdf}
+\caption{Number of Google ratings against the distance from the Orloj in km, by side of the Orloj. Each point is one caf\'e, and the lines are regression lines with 95\% confidence bands. The sample size is in Table~\ref{tab:a9}.}
+\label{fig:a9}
+\end{figure}
+
+\yourwords{The interaction coefficient with its interval and exact $p$, and the slope on each side. Explain in words what the interaction term means. If it is not significant, write that there is no evidence of a difference, not that there is no difference.}
+
+%% -------------------------------------------------------------------
+\subsection{A10: Probability of an above-median number of ratings}
+Does the probability that a caf\'e has an above-median number of ratings change with each additional km away from the Orloj, and if so, by how many percentage points?
+
+\noindent\Ho: the probability of an above-median number of ratings does not change with distance (the coefficient is 0). \Hone: the probability changes with distance (the coefficient is not 0; two-tailed, fixed in advance).
+
+\begin{table}[ht]
+\centering
+\caption{Logistic regression of having an above-median number of Google ratings on the distance from the Orloj. The marginal effect is the average change in probability per km, in percentage points, with its 95\% confidence interval.}
+\label{tab:a10}
+\inputtable{tables/A10_table.tex}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\inputfigure{figures/A10_figure.pdf}
+\caption{Probability of an above-median number of Google ratings against the distance from the Orloj in km. Grey points are individual caf\'es at 1 (above the median) or 0, moved slightly apart vertically so that they can be seen. The blue curve is the fitted logistic curve with its 95\% confidence band. The sample size is in Table~\ref{tab:a10}.}
+\label{fig:a10}
+\end{figure}
+
+\yourwords{How the outcome was defined (the median computed in code, a caf\'e exactly on the median counts as not above it). The average marginal effect in percentage points per km with its interval as the headline, the odds ratio only as a check, and $n$.}
+
+%% -------------------------------------------------------------------
+\section{Discussion}
+\yourwords{What the results together say about where Prague cafes are and how busy they are, in this sample. Discuss at least: a convenience sample collected by students, observational data so no causal claims, caf\'es in the same district are not independent and how that affects every test that assumes independence, and the influence of a few very popular caf\'es. Say what a reader should and should not conclude.}
+
+\section{Conclusion}
+\yourwords{A short conclusion that answers the question of this chapter of the story.}
+
+%% -------------------------------------------------------------------
+\appendix
+\clearpage
+
+\section{Descriptive statistics}\label{app:desc}
+
+\begin{table}[ht]
+\centering
+\caption{Descriptive statistics of the numeric variables used, overall and for each group compared. CI is the 95\% confidence interval of the mean. Distances are in km.}
+\label{tab:desc}
+\inputtable{tables/D_summary.tex}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Counts and percentages of the categorical variables used. NA marks missing values.}
+\label{tab:cat}
+\inputtable{tables/D_categories.tex}
+\end{table}
+
+\clearpage
+\section{Distributions and normality}\label{app:dist}
+\yourwords{What the plots and checks showed: skewness, outliers and the shape within each group. Confirm from the histograms and Q--Q plots that the conclusions in Table~\ref{tab:decision} hold, in particular for roasteries, whose skewness is very close to the limit. State which test follows for each question.}
+
+\begin{table}[ht]
+\centering
+\caption{Decision table. A variable or group counts as roughly normal if its absolute skewness is below 0.5. The central limit theorem counts as applying if there are at least 30 caf\'es and the absolute skewness of 5,000 bootstrapped means (seed 123) is below 0.5. A parametric test is justified if either holds.}
+\label{tab:decision}
+\inputtable{tables/D_table.tex}
+\end{table}
+
+\begin{figure}[p]
+\centering
+\inputfigure[1]{figures/D_histograms.pdf}
+\caption{Histograms of each numeric variable, overall and for each group compared.}
+\label{fig:hist}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\inputfigure[1]{figures/D_boxplots.pdf}
+\caption{Boxplots of each numeric variable, with the groups compared side by side.}
+\label{fig:box}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\inputfigure[1]{figures/D_qqplots.pdf}
+\caption{Normal Q--Q plots of each numeric variable, overall and for each group compared. Points on the red line match a normal distribution.}
+\label{fig:qq}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\inputfigure[1]{figures/D_bootstrap.pdf}
+\caption{Distribution of 5,000 bootstrapped means (seed 123) of each numeric variable, overall and for each group compared.}
+\label{fig:boot}
+\end{figure}
+
+\clearpage
+\section{Regression diagnostics}\label{app:diag}
+\yourwords{What the residual and Q--Q plots show for A7 to A9, which caf\'es are influential, and whether each conclusion survives without them.}
+
+\begin{figure}[p]
+\centering
+\inputfigure[0.9]{figures/A7_diagnostics.pdf}
+\caption{Diagnostic plots of the regression in A7: residuals against fitted values, normal Q--Q plot, scale--location and residuals against leverage.}
+\label{fig:a7diag}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\caption{The five caf\'es with the largest Cook's distance in A7.}
+\label{tab:a7infl}
+\inputtable{tables/A7_influential.tex}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Slope of distance in A7 with all caf\'es and without those whose Cook's distance is above $4/n$.}
+\label{tab:a7sens}
+\inputtable{tables/A7_sensitivity.tex}
+\end{table}
+
+\clearpage
+\begin{figure}[p]
+\centering
+\inputfigure[0.9]{figures/A8_diagnostics.pdf}
+\caption{Diagnostic plots of the regression in A8: residuals against fitted values, normal Q--Q plot, scale--location and residuals against leverage.}
+\label{fig:a8diag}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\inputfigure[0.9]{figures/A8_partial.pdf}
+\caption{Added-variable plots for A8: the number of ratings against each predictor, holding the other predictor constant. Each point is one caf\'e.}
+\label{fig:a8partial}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\caption{The five caf\'es with the largest Cook's distance in A8.}
+\label{tab:a8infl}
+\inputtable{tables/A8_influential.tex}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Slope of distance in A8 with all caf\'es and without those whose Cook's distance is above $4/n$.}
+\label{tab:a8sens}
+\inputtable{tables/A8_sensitivity.tex}
+\end{table}
+
+\clearpage
+\begin{figure}[p]
+\centering
+\inputfigure[0.9]{figures/A9_diagnostics.pdf}
+\caption{Diagnostic plots of the regression in A9: residuals against fitted values, normal Q--Q plot, scale--location and residuals against leverage.}
+\label{fig:a9diag}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\caption{The five caf\'es with the largest Cook's distance in A9.}
+\label{tab:a9infl}
+\inputtable{tables/A9_influential.tex}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Interaction in A9 with all caf\'es and without those whose Cook's distance is above $4/n$.}
+\label{tab:a9sens}
+\inputtable{tables/A9_sensitivity.tex}
+\end{table}
+
+\clearpage
+\section{Post hoc tables}\label{app:robust}
+
+\begin{table}[ht]
+\centering
+\caption{Median distance from the Orloj by caf\'e type, with bootstrapped 95\% confidence intervals (5,000 resamples, seed 123).}
+\label{tab:a4groups}
+\inputtable{tables/A4_groups.tex}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Pairwise comparisons of caf\'e types. The difference is in medians with a bootstrapped 95\% confidence interval, and $z$ and the adjusted $p$-value come from Dunn's test with Holm's adjustment.}
+\label{tab:a4pairs}
+\inputtable{tables/A4_pairwise.tex}
+\end{table}
+
+\section{Reproducibility}\label{app:repro}
+Run in this order from the repository root: \texttt{analysis/01\_cleaning.R}, \texttt{analysis/02\_descriptive.R}, \texttt{analysis/03\_analysis.R}. Software: R 4.6.1 with the packages dplyr, ggplot2, xtable, rstatix, car, lmtest, sandwich and marginaleffects. All bootstrap procedures use 5,000 resamples and seed 123. The random sideways spread of the points in the figures uses seed 1100.
+
+\noindent Repository: \textcolor{red!70!black}{[link to your GitHub repository]}
+
+\end{document}

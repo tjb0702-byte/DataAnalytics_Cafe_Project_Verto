@@ -1,0 +1,31 @@
+# Private notes and instructions
+CLAUDE.md
+study-guide/
+
+# The lecturer's course repository (a separate Git repository)
+data-analytics/
+
+# Original downloads (analysis/raw_data.csv is the copy the scripts use)
+2) Data Collection Sheet*
+
+# Windows and OneDrive
+desktop.ini
+
+# R and RStudio
+.Rhistory
+.RData
+.Rproj.user/
+
+# LaTeX working files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
