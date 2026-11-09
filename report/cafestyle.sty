@@ -1,0 +1,58 @@
+% cafestyle.sty -- shared look for the Prague Cafe Project brief and the student report template
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cafestyle}[2026/11/02 Prague Cafe Project style]
+
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[english]{babel}
+\RequirePackage{mathpazo}          % Palatino text and math
+\RequirePackage{microtype}
+\RequirePackage[a4paper,margin=2.6cm]{geometry}
+\RequirePackage{setspace}
+\setstretch{1.12}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{graphicx}
+\RequirePackage{booktabs}          % for RStudio-exported tables (xtable, modelsummary, stargazer)
+\RequirePackage{caption}
+\captionsetup{font=small,labelfont=bf,labelsep=period,justification=justified,singlelinecheck=false}
+\RequirePackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\itshape}{\thesubsubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .4ex}{1ex}
+\titlespacing*{\subsection}{0pt}{1.8ex plus .3ex}{0.6ex}
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\small\thepage}
+\RequirePackage{abstract}
+\renewcommand{\abstractnamefont}{\normalfont\small\bfseries}
+\renewcommand{\abstracttextfont}{\normalfont\small}
+\RequirePackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\RequirePackage{xcolor}
+\setlength{\parindent}{1.2em}
+\setlength{\parskip}{0pt}
+\raggedbottom
+
+% ---------- statistics macros: use them so every number is formatted the same way ----------
+\newcommand{\Ho}{H$_0$}
+\newcommand{\Hone}{H$_1$}
+\newcommand{\pr}{\textit{p}}
+\newcommand{\Ncol}{\textit{N}}
+\newcommand{\ncol}{\textit{n}}
+% \CI{lower}{upper}  -> 95\% CI [lower, upper]
+\newcommand{\CI}[2]{95\% CI [#1,\,#2]}
+% \meanci{M}{lower}{upper}{unit} -> M = 82.4 CZK, 95% CI [79.8, 85.0]
+\newcommand{\meanci}[4]{\textit{M}\,=\,#1\,#4, \CI{#2}{#3}}
+% \diffci{diff}{lower}{upper}{unit}{d}{dlower}{dupper} -> mean difference with CI and Cohen's d with CI
+\newcommand{\diffci}[7]{\textit{M}$_\Delta$\,=\,#1\,#4, \CI{#2}{#3}, \textit{d}\,=\,#5, \CI{#6}{#7}}
+% \tstat{df}{value}  -> t(df) = value ;  \Fstat{df1}{df2}{value}
+\newcommand{\tstat}[2]{\textit{t}(#1)\,=\,#2}
+\newcommand{\Fstat}[3]{\textit{F}(#1,\,#2)\,=\,#3}
+\newcommand{\chisqstat}[3]{$\chi^2$(#1, \Ncol\,=\,#2)\,=\,#3}
+% \pval{.034} -> p = .034 ;  \plt{.001} -> p < .001
+\newcommand{\pval}[1]{\pr\,=\,#1}
+\newcommand{\plt}[1]{\pr\,<\,#1}
+
+\endinput
