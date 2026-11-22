@@ -21,6 +21,10 @@
 
 \usepackage{booktabs}   % needed for the tables exported by xtable
 
+% The research question, copied word for word from Appendix C of the
+% project guidelines (topic Location).
+\newcommand{\researchq}[1]{{\small\textbf{Research question:} \emph{#1}\par}\smallskip}
+
 % A divider slide that opens each part of the talk and names its presenter.
 % #1 = title of the part, #2 = questions covered, #3 = presenter
 \newcommand{\partslide}[3]{%
@@ -79,11 +83,12 @@
 
 %% -------------------------------------------------------------------
 \begin{frame}{A1: Caf\'es are about 2 km from the Orloj on average}
+\researchq{Is the average distance of caf\'es from the Orloj different from 2 km?}
+
 \begin{columns}[c]
 \column{0.55\textwidth}
 \includegraphics[width=\linewidth]{\fig{A1_figure.pdf}}
 \column{0.43\textwidth}
-\textbf{Is the average distance different from 2 km?}
 \begin{itemize}
   \item Mean distance 1.94 km, 95\% CI [1.75, 2.13], $n = 189$
   \item Effect size: Cohen's $d = -0.04$
@@ -97,11 +102,12 @@ There is no evidence that the average distance differs from 2 km. The gap of 0.0
 
 %% -------------------------------------------------------------------
 \begin{frame}{A2: Roasteries tend to be a little farther out}
+\researchq{Are roasteries farther from the Orloj than other caf\'es?}
+
 \begin{columns}[c]
 \column{0.55\textwidth}
 \includegraphics[width=\linewidth]{\fig{A2_figure.pdf}}
 \column{0.43\textwidth}
-\textbf{Are roasteries farther from the Orloj than other caf\'es?}
 \begin{itemize}
   \item Median 2.17 km for 22 roasteries, 1.64 km for 167 other caf\'es
   \item Difference 0.50 km, 95\% CI [$-0.04$, 1.04]
@@ -115,11 +121,12 @@ Roasteries are typically about half a kilometre farther out. The interval reache
 
 %% -------------------------------------------------------------------
 \begin{frame}{A3: Caf\'es spread farther east--west than north--south}
+\researchq{Are caf\'es spread farther east--west (longitude) than north--south (latitude) from the Orloj?}
+
 \begin{columns}[c]
 \column{0.55\textwidth}
 \includegraphics[width=\linewidth]{\fig{A3_figure.pdf}}
 \column{0.43\textwidth}
-\textbf{Is the east--west distance from the Orloj larger than the north--south distance?}
 \begin{itemize}
   \item Mean difference 0.42 km, 95\% CI [0.28, 0.56], $n = 189$
   \item Effect size: Cohen's $d_z = 0.43$
@@ -133,13 +140,12 @@ A typical caf\'e is about 0.4 km farther from the Orloj east--west than north--s
 
 %% -------------------------------------------------------------------
 \begin{frame}{A4: No clear difference in distance between caf\'e types}
+\researchq{Does the distance from the Orloj differ by Caf\'e Type (independent, local chain, international chain), and if so, how?}
+
 \begin{columns}[c]
 \column{0.50\textwidth}
 \includegraphics[width=\linewidth]{\fig{A4_figure.pdf}}
 \column{0.48\textwidth}
-\textbf{Does distance from the Orloj differ by caf\'e type?}
-
-\medskip
 % The medians and their bootstrapped 95% intervals, exported by 03_analysis.R
 \resizebox{\linewidth}{!}{\input{\tab{A4_groups.tex}}}
 \begin{itemize}
@@ -153,11 +159,12 @@ International chains look more central, but with only nine of them there is no e
 
 %% -------------------------------------------------------------------
 \begin{frame}{A5: International chains are more often in Prague 1}
+\researchq{Is an international chain more likely to be in Prague 1 than other caf\'e types, and if so, by how many percentage points?}
+
 \begin{columns}[c]
 \column{0.55\textwidth}
 \includegraphics[width=\linewidth]{\fig{A5_figure.pdf}}
 \column{0.43\textwidth}
-\textbf{Is an international chain more likely to be in Prague 1?}
 \begin{itemize}
   \item In Prague 1: 6 of 9 international chains (66.67\%), 58 of 179 other caf\'es (32.40\%)
   \item Difference 34.26 percentage points, 95\% CI [2.71, 65.82]
@@ -178,11 +185,12 @@ International chains are about 34 percentage points more likely to be in Prague 
 
 %% -------------------------------------------------------------------
 \begin{frame}{A6: Caf\'es farther from the Orloj have fewer ratings}
+\researchq{Is the number of Google ratings correlated with the distance from the Orloj, and if so, in which direction and how strongly?}
+
 \begin{columns}[c]
 \column{0.55\textwidth}
 \includegraphics[width=\linewidth]{\fig{A6_figure.pdf}}
 \column{0.43\textwidth}
-\textbf{Is the number of ratings correlated with distance?}
 \begin{itemize}
   \item Spearman's $\rho = -0.33$, 95\% CI [$-0.46$, $-0.19$], $n = 187$
   \item Effect size: $\rho^2 = 0.11$
@@ -196,11 +204,12 @@ A moderate negative link: the farther a caf\'e is from the Orloj, the fewer rati
 
 %% -------------------------------------------------------------------
 \begin{frame}{A7: About 330 fewer ratings for each km from the Orloj}
+\researchq{By how many ratings does the number of Google ratings change per km from the Orloj?}
+
 \begin{columns}[c]
 \column{0.55\textwidth}
 \includegraphics[width=\linewidth]{\fig{A7_figure.pdf}}
 \column{0.43\textwidth}
-\textbf{By how many ratings does the count change per km?}
 \begin{itemize}
   \item Slope $-327.14$ ratings per km, 95\% CI [$-548.43$, $-105.84$], $n = 187$
   \item Effect size: $R^2 = 0.04$
@@ -214,11 +223,12 @@ Each extra km goes with about 327 fewer ratings, but distance explains only 4\% 
 
 %% -------------------------------------------------------------------
 \begin{frame}{A8: The link holds for caf\'es of the same size}
+\researchq{Does the link between distance from the Orloj and the number of ratings hold once you account for the number of seats inside, and if so, how much of it remains?}
+
 \begin{columns}[c]
 \column{0.55\textwidth}
 \includegraphics[width=\linewidth]{\fig{A8_figure.pdf}}
 \column{0.43\textwidth}
-\textbf{Does the link hold once seats inside are accounted for?}
 \begin{itemize}
   \item Slope $-229.29$ ratings per km, 95\% CI [$-408.67$, $-49.91$], $n = 187$
   \item 70.09\% of the slope from A7 remains
@@ -233,11 +243,12 @@ Comparing caf\'es with the same number of seats, each extra km still goes with a
 
 %% -------------------------------------------------------------------
 \begin{frame}{A9: No evidence that the link differs east and west}
+\researchq{Does the relationship between distance from the Orloj and the number of ratings differ between caf\'es east and west of the Orloj, and if so, how?}
+
 \begin{columns}[c]
 \column{0.55\textwidth}
 \includegraphics[width=\linewidth]{\fig{A9_figure.pdf}}
 \column{0.43\textwidth}
-\textbf{Does the distance--ratings link differ east and west of the Orloj?}
 \begin{itemize}
   \item Slope $-683.92$ ratings per km in the west, $-206.58$ in the east
   \item Difference between the slopes 477.34, 95\% CI [$-231.32$, 1186.00], $n = 187$
@@ -252,11 +263,12 @@ The drop looks steeper in the west, but the interval includes zero, so there is 
 
 %% -------------------------------------------------------------------
 \begin{frame}{A10: Each km lowers the chance of being a busy caf\'e by 13 points}
+\researchq{Does the probability that a caf\'e has an above-median number of ratings change with each additional km away from the Orloj, and if so, by how many percentage points?}
+
 \begin{columns}[c]
 \column{0.55\textwidth}
 \includegraphics[width=\linewidth]{\fig{A10_figure.pdf}}
 \column{0.43\textwidth}
-\textbf{Does the probability of an above-median number of ratings change per km?}
 \begin{itemize}
   \item Average marginal effect $-13.15$ percentage points per km, 95\% CI [$-18.02$, $-8.29$], $n = 187$
   \item Odds ratio 0.55 per km
