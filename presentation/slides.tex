@@ -21,6 +21,20 @@
 
 \usepackage{booktabs}   % needed for the tables exported by xtable
 
+% A divider slide that opens each part of the talk and names its presenter.
+% #1 = title of the part, #2 = questions covered, #3 = presenter
+\newcommand{\partslide}[3]{%
+\begin{frame}[plain]
+\vfill
+\centering
+{\usebeamercolor[fg]{structure}\LARGE\bfseries #1\par}
+\bigskip
+{\large #2\par}
+\medskip
+{\large Presented by #3\par}
+\vfill
+\end{frame}}
+
 % Short names for the two folders the R scripts export to.
 \newcommand{\fig}[1]{../report/figures/#1}
 \newcommand{\tab}[1]{../report/tables/#1}
@@ -51,11 +65,17 @@
 \column{0.46\textwidth}
 \textbf{The story in two parts}
 \begin{itemize}
-  \item \textbf{Part 1, where caf\'es are (A1 to A5):} how far from the centre, in which direction, and which kinds of caf\'e
-  \item \textbf{Part 2, how busy they are (A6 to A10):} do caf\'es farther from the centre get fewer ratings?
+  \item \textbf{Part 1, where caf\'es are (A1 to A5, Tyler):} how far from the centre, in which direction, and which kinds of caf\'e
+  \item \textbf{Part 2, how busy they are (A6 to A10, Jaxson):} do caf\'es farther from the centre get fewer ratings?
 \end{itemize}
 \end{columns}
 \end{frame}
+
+%% ===================================================================
+%%  PART 1: where cafes are (A1 to A5)
+%% ===================================================================
+\section{Part 1: Where caf\'es are}
+\partslide{Part 1: Where caf\'es are}{Questions A1 to A5}{Tyler Bannon}
 
 %% -------------------------------------------------------------------
 \begin{frame}{A1: Caf\'es are about 2 km from the Orloj on average}
@@ -149,6 +169,12 @@ International chains are about 34 percentage points more likely to be in Prague 
 \end{block}
 \end{columns}
 \end{frame}
+
+%% ===================================================================
+%%  PART 2: how busy cafes are (A6 to A10)
+%% ===================================================================
+\section{Part 2: How busy they are}
+\partslide{Part 2: How busy they are}{Questions A6 to A10}{Jaxson Sachs}
 
 %% -------------------------------------------------------------------
 \begin{frame}{A6: Caf\'es farther from the Orloj have fewer ratings}
