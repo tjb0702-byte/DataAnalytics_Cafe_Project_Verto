@@ -15,31 +15,39 @@
 % A visible reminder of what still has to be written in your own words.
 \newcommand{\yourwords}[1]{\par\medskip\noindent\textcolor{red!70!black}{\textbf{[Your words:} #1\textbf{]}}\par\medskip}
 
-\title{\textbf{\textcolor{red!70!black}{[Your title: what you asked and what you found]}}}
-\author{Tyler Bannon\\[0.3ex]\small Data Analytics, Topic: Location\\[0.3ex]\small \textcolor{red!70!black}{[Team members, if any]}}
+\title{\textbf{Where Prague caf\'es are and how busy they are: caf\'es farther from the Orloj get fewer Google ratings}}
+\author{Tyler Bannon\\[0.3ex]\small Data Analytics, Topic: Location\\[0.3ex]\small Team members: Jaxson Sachs, Rishin Kumar}
 \date{\today}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-\noindent\yourwords{About 100 words. The outcome (where cafes are and how busy they are), the sample size, the analyses you cover, and the two or three main results with effect sizes in km or ratings. Nothing that is not in the text below.}
+\noindent This report looks at where caf\'es in Prague are and how busy they are, using 189 caf\'es collected by our class. Location is measured as the distance from the Orloj, and popularity as the number of Google ratings. I answer ten questions, from a one-sample $t$-test to a logistic regression. The average caf\'e is 1.94\,km from the Orloj, which is not different from 2\,km, and caf\'es spread about 0.42\,km farther east--west than north--south. Caf\'es farther out have fewer ratings: about 327 fewer per km, still about 229 fewer for caf\'es with the same number of seats, and each km lowers the chance of an above-median number of ratings by about 13 percentage points.
 \end{abstract}
 
 \section{Introduction}
-\yourwords{Two or three sentences on why a cafe's popularity might depend on where it is, and how this topic is one chapter of the wider story about the Prague cafe market. State the research questions in plain words. Do not describe methods here.}
+A caf\'e in the centre of Prague is passed by many more people, including tourists, than a caf\'e in a residential district, so it might get more visitors and more Google ratings. This project is one chapter of a wider story about the Prague caf\'e market, next to what caf\'es charge, how well they are rated, how big they are and what speciality caf\'es offer. My chapter is about location: where caf\'es are, and whether that goes together with how busy they are.
+
+In plain words, I first ask where the caf\'es are. How far from the Orloj is the average caf\'e (A1)? Are roasteries farther out than other caf\'es (A2)? Are caf\'es spread more east--west than north--south (A3)? Does the distance differ by caf\'e type (A4), and are international chains more often in Prague 1 (A5)? Then I ask about how busy they are. Is the number of ratings linked to the distance from the Orloj (A6), and by how many ratings does it change per km (A7)? Does this hold for caf\'es with the same number of seats (A8), does it differ east and west of the Orloj (A9), and how does the chance of having more ratings than the median caf\'e change per km (A10)?
 
 \section{Data and methods}
 
 \subsection{Data}
-\yourwords{Where the data come from and how they were collected. Then list every cleaning choice and how many cafes it affected. The facts are: 299 rows in the raw file; 99 empty rows removed, leaving 200; 11 cafes entered twice, keeping the row entered first, leaving 189; about 15 spellings of 9 districts harmonised; 5 cafes moved to the district their address shows (sheet rows 37, 39, 43, 44, 144); one blank cafe type set to missing (row 136); Paul (row 113) recoded as an international chain; thousands commas removed from the number of ratings; Cafe Fiesta (row 85) kept with 0 ratings; latitude and longitude taken from the coordinates cell because the two disagree in row 39. Say which variables have missing values (see Table~\ref{tab:desc}) and explain why you made each choice. Add a sentence on how a different choice could change the results.}
+The data come from the class Data Collection Sheet. Each student visited 20 caf\'es in Prague in person and recorded, among other things, the district, the coordinates, the number of seats inside, the Google rating and number of ratings, and the caf\'e type. The distance from the Orloj in km was already calculated from the coordinates. I downloaded the sheet as a CSV file and did every cleaning step in the script \texttt{01\_cleaning.R}, without editing the raw file.
+
+The raw file has 299 rows. I removed 99 empty rows that had no caf\'e name, which leaves 200 caf\'es. Eleven caf\'es were entered twice (the same business at the same address). I kept the row that was entered first in the sheet, because this rule is fixed in advance and does not depend on any variable I analyse, which leaves 189 caf\'es. The EMA branches and DECADA/DECAGRAM are different caf\'es, so they stay. The district was written in about 15 different ways for 9 districts (for example ``prauge 1'' and ``Prage 7''), so I kept only the district number. Five caf\'es were moved to the district that their address shows: rows 37, 39, 43 and 44 were labelled Prague 2 but have Prague 1 or Mal\'a Strana addresses, and row 144 was labelled Prague 7 but its address is in Praha 5. One blank caf\'e type (row 136) was set to missing instead of being treated as its own category. Paul (row 113) was recoded as an international chain, because Paul is one international business and its other branch (row 189) is labelled that way. The number of ratings was stored as text because some counts had a thousands comma, so I removed the commas, converted it to a number and printed the same rows again to check the result. Caf\'e Fiesta (row 85) keeps 0 ratings: its Google rating is missing, which is what a listing with no reviews looks like, so 0 is a real count and not a gap. Latitude and longitude were taken from the coordinates cell, because in row 39 the sheet's own Latitude and Longitude columns disagree with it. From these I created the east--west and north--south distances in km with the formulas from the guidelines, and 0/1 indicators for east of the Orloj, Prague 1, international chain and an above-median number of ratings, with the median (446 ratings) computed in code.
+
+After cleaning, the number of ratings is missing for 2 caf\'es (rows 99 and 100), seats inside for 1 caf\'e (row 100) and caf\'e type for 1 caf\'e (row 136); see Tables~\ref{tab:desc} and~\ref{tab:cat}. Each analysis uses every caf\'e that has the variables it needs, so the sample size is between 187 and 189.
+
+Other choices were possible, and some could change the results. Keeping the second row of each duplicate instead of the first would change a few values, because Savoy and Caf\'e-Caf\'e have different caf\'e types in their two rows. Leaving Paul as it was would leave only 8 international chains. Because there are so few international chains, a change like this could move the results of A4 and A5 noticeably.
 
 \subsection{Statistical methods}
-\yourwords{One short paragraph. State the significance level (.05); which test you used for each question and why (use Table~\ref{tab:decision}: the shape of the distribution and the size of the smallest group); that a one-tailed alternative is used only where the question names a direction (A2, A3, A5); the robust HC3 standard errors in A7 to A9 and why; the bootstrap settings (5,000 resamples, seed 123, percentile intervals); the Holm adjustment in A4; and the software (see Appendix~\ref{app:repro}).}
+I use a significance level of .05 for every test. The choice between a parametric and a non-parametric test follows the decision table (Table~\ref{tab:decision}): a test is parametric if the variable looks roughly normal, or if the central limit theorem applies, which needs at least 30 caf\'es and bootstrapped means that are close to symmetric. A1 therefore uses a one-sample $t$-test and A3 a paired $t$-test, because distance and the east--west minus north--south difference are fine with 189 caf\'es. A2 uses the Wilcoxon rank-sum test because there are only 22 roasteries and their distances are skewed, and A4 uses the Kruskal--Wallis test because there are only 9 international chains. A5 uses Fisher's exact test because the smallest expected count is below 5. A6 uses Spearman's correlation because the number of ratings is very skewed. A7 to A9 use linear regression, and A10 uses logistic regression reported as an average marginal effect. A one-tailed alternative is used only where the question names a direction (A2 ``farther'', A3 ``farther'' and A5 ``more likely''); all other tests are two-tailed, and all confidence intervals are two-sided. In A7 to A9 I use robust (HC3) standard errors, because the Breusch--Pagan test rejects constant variance in A8, and using them in all three keeps the regressions comparable. Bootstrap intervals use 5,000 resamples, seed 123 and the percentile method. In A4, the pairwise comparisons (Dunn's test) use Holm's adjustment for multiple comparisons. All of the analysis was done in R (Appendix~\ref{app:repro}).
 
 \section{Results}
 
-\yourwords{One or two sentences that lead the reader through the story, then refer to Table~\ref{tab:summary}.}
+The results follow the story in two parts: A1 to A5 describe where the caf\'es are, and A6 to A10 ask whether caf\'es farther from the centre are less busy. Table~\ref{tab:summary} gives the main result of each analysis.
 
 \begin{table}[ht]
 \centering
@@ -69,7 +77,7 @@ Is the average distance of caf\'es from the Orloj different from 2\,km?
 \end{figure}
 
 % Macros: \meanci{mean}{lower}{upper}{km}, \tstat{df}{value}, \pval{.xxx} or \plt{.001}
-\yourwords{Estimate with its interval and sample size, Cohen's $d$, then $t(df)$ and the exact $p$. One sentence in km: what the result means, and whether a gap of this size matters in practice. Why is a median worth giving next to the mean here?}
+The average caf\'e in the sample is \meanci{1.94}{1.75}{2.13}{km} from the Orloj, with \ncol\,=\,189 (Table~\ref{tab:a1}, Figure~\ref{fig:a1}). The interval contains 2\,km, and the effect is tiny (Cohen's \textit{d}\,=\,$-0.04$). The one-sample $t$-test gives \tstat{188}{$-0.59$}, \pval{.557}, so there is no evidence that the average distance differs from 2\,km. The gap is only 0.06\,km, about 60 metres, which does not matter in practice. The median, 1.73\,km (IQR 1.66\,km), is worth giving next to the mean because distance is skewed to the right (skewness 1.13): a few caf\'es far from the centre, up to 8.08\,km, pull the mean up, so the median describes a typical caf\'e better.
 
 %% -------------------------------------------------------------------
 \subsection{A2: Roasteries and other caf\'es}
@@ -91,7 +99,9 @@ Are roasteries farther from the Orloj than other caf\'es?
 \label{fig:a2}
 \end{figure}
 
-\yourwords{State the direction of the subtraction in words. Give the difference with its interval, then $W$ and the one-tailed $p$. Explain what it means that the $p$-value is one-tailed while the interval is two-sided, and what the two together let you claim. Mention the Levene check and the dependence of caf\'es in the same district.}
+The difference is the distance of roasteries minus the distance of other caf\'es, so a positive number means that roasteries are farther from the Orloj. The median distance is 2.17\,km for the 22 roasteries and 1.64\,km for the 167 other caf\'es. The Hodges--Lehmann estimate of the difference is 0.50\,km, \CI{$-0.04$}{1.04}, and the Wilcoxon rank-sum test gives $W$\,=\,2274, one-tailed \pval{.035} (Table~\ref{tab:a2}, Figure~\ref{fig:a2}).
+
+The $p$-value is one-tailed because the question asks whether roasteries are \emph{farther} out, so the test only looks in that direction. The interval is two-sided and therefore stricter, and its lower end just reaches below 0. Together they let me say that roasteries tend to be about half a kilometre farther out, and that this is significant in the one-tailed test, but the evidence is weak: no difference is still plausible at the 95\% level, and the interval is wide because there are only 22 roasteries. Levene's test shows no difference in spread between the two groups (\pval{.488}), so the rank test can be read as a comparison of typical distances. Caf\'es in the same district are not independent, because nearby caf\'es share the same location. If roasteries cluster in a few districts, the test treats them as more separate pieces of information than they really are, so the $p$-value may be too small.
 
 %% -------------------------------------------------------------------
 \subsection{A3: East--west and north--south spread}
@@ -113,7 +123,7 @@ Are caf\'es spread farther east--west than north--south from the Orloj?
 \label{fig:a3}
 \end{figure}
 
-\yourwords{State the direction of the subtraction in words. Mean difference with its interval, $d_z$, then $t(df)$ and the one-tailed $p$. One sentence in km.}
+The difference is each caf\'e's absolute east--west distance minus its absolute north--south distance, so a positive number means that the caf\'e is farther from the Orloj east--west than north--south. The mean difference is \meanci{0.42}{0.28}{0.56}{km}, with \ncol\,=\,189 and Cohen's $d_z$\,=\,0.43, a small-to-medium effect. The paired $t$-test gives \tstat{188}{5.97}, one-tailed \plt{.001} (Table~\ref{tab:a3}, Figure~\ref{fig:a3}). A typical caf\'e is about 0.4\,km farther from the Orloj east--west than north--south, and the whole interval lies above 0.
 
 %% -------------------------------------------------------------------
 \subsection{A4: Distance by caf\'e type}
@@ -135,7 +145,7 @@ Does the distance from the Orloj differ by caf\'e type (independent, local chain
 \label{fig:groups}
 \end{figure}
 
-\yourwords{$H(df)$ and the exact $p$. Say whether the pairwise comparisons should be read at all, given this result (they are in Appendix~\ref{app:robust}). Comment on how much can be said about international chains with so few of them.}
+The Kruskal--Wallis test gives $H(2)$\,=\,4.81, \pval{.090}, with \ncol\,=\,188 (Table~\ref{tab:a4}), so there is no evidence that the typical distance from the Orloj differs between caf\'e types. Levene's test shows a similar spread in the three groups (\pval{.652}). The median distance is 1.64\,km for independent caf\'es, 2.02\,km for local chains and 0.58\,km for international chains (Table~\ref{tab:a4groups}, Figure~\ref{fig:groups}). Because the overall test is not significant, the pairwise comparisons in Appendix~\ref{app:robust} should not be read as findings, and none of them is significant after Holm's adjustment anyway. Very little can be said about international chains. With only 9 of them, the interval of their median runs from 0.42 to 2.36\,km. Six of them are within 0.65\,km of the Orloj and three are farther out, so their median depends heavily on which few chains happen to be in the sample.
 
 %% -------------------------------------------------------------------
 \subsection{A5: International chains and Prague 1}
@@ -164,7 +174,9 @@ Is an international chain more likely to be in Prague 1 than other caf\'e types,
 \label{fig:a5}
 \end{figure}
 
-\yourwords{Counts and percentages, the difference in percentage points with its interval, the smallest expected count and why it leads to Fisher's test, Cram\'er's $V$, then the odds ratio with its interval and the one-tailed $p$. The percentage-point interval and the odds-ratio interval may tell different stories: explain which you trust and why, given how few international chains there are.}
+Six of the 9 international chains (66.67\%) are in Prague 1, compared with 58 of the 179 other caf\'es (32.40\%); see Table~\ref{tab:a5counts} and Figure~\ref{fig:a5}. The difference, international chains minus the rest, is 34.26 percentage points, \CI{2.71}{65.82}. The smallest expected count is 3.06, which is below 5, so the chi-square approximation is not reliable and I use Fisher's exact test instead. The association is small (Cram\'er's $V$\,=\,0.15). The odds ratio is 4.14, \CI{0.85}{26.47}, and the one-tailed \pval{.043} (Table~\ref{tab:a5}).
+
+The two intervals tell different stories: the percentage-point interval excludes 0, but the odds-ratio interval includes 1, which would mean no difference. I trust the odds-ratio interval more. It comes from the exact test, while the percentage-point interval relies on a normal approximation, which is not accurate with only 9 international chains. So international chains look about 34 percentage points more likely to be in Prague 1, and the one-tailed test is significant, but the evidence is weak and the size of the difference is very uncertain.
 
 %% -------------------------------------------------------------------
 \subsection{A6: Number of ratings and distance}
@@ -186,7 +198,7 @@ Is the number of Google ratings correlated with the distance from the Orloj, and
 \label{fig:a6}
 \end{figure}
 
-\yourwords{$\rho$ with its interval and $n$, the share of shared variance, the exact $p$. Direction and strength in plain words. Do not suggest a cause.}
+Spearman's correlation between the number of ratings and the distance from the Orloj is $\rho$\,=\,$-0.33$, bootstrapped \CI{$-0.46$}{$-0.19$}, with \ncol\,=\,187 and \plt{.001} (Table~\ref{tab:a6}, Figure~\ref{fig:a6}). The ranks of the two variables share about 11\% of their variance ($\rho^2$\,=\,0.11). This is a moderate negative link: caf\'es farther from the Orloj tend to have fewer ratings. It is an association only and says nothing about what causes it.
 
 %% -------------------------------------------------------------------
 \subsection{A7: Ratings per km}
@@ -208,7 +220,9 @@ By how many ratings does the number of Google ratings change per km from the Orl
 \label{fig:a7}
 \end{figure}
 
-\yourwords{The slope in ratings per km with its robust interval, $R^2$, the exact $p$. What the residual plots show (Figure~\ref{fig:a7diag}). Name the influential caf\'es (Table~\ref{tab:a7infl}) and say how the slope changes without them (Table~\ref{tab:a7sens}). Is a straight line in raw ratings a good description of these data?}
+The slope is $-327.14$ ratings per km, robust \CI{$-548.43$}{$-105.84$}, $t$\,=\,$-2.90$, \pval{.004}, with \ncol\,=\,187 (Table~\ref{tab:a7}, Figure~\ref{fig:a7}). Each extra km from the Orloj goes with about 327 fewer ratings, but distance explains only 4\% of the differences in ratings between caf\'es (\textit{R}$^2$\,=\,0.04). The Breusch--Pagan test does not reject constant variance in this model (\pval{.189}), but I keep the robust standard errors so that A7 to A9 are comparable.
+
+The residual plots (Figure~\ref{fig:a7diag}) show that the model fits badly: the residuals are strongly right-skewed in the Q--Q plot, and a few caf\'es have huge positive residuals. By far the most influential caf\'e is Caf\'e Louvre (row 10), with 23,951 ratings at 0.58\,km and a Cook's distance of 0.69; the next are Caf\'e Slavia and Caf\'e Savoy (Table~\ref{tab:a7infl}). Without the four caf\'es whose Cook's distance is above $4/n$, the slope falls to $-196.65$ ratings per km (Table~\ref{tab:a7sens}), so about 40\% of the slope comes from a handful of famous central caf\'es. A straight line in raw ratings is not a good description of these data, because the ratings are very skewed and the line is pulled by a few very popular caf\'es. The rank correlation in A6 and the logistic regression in A10 are much less sensitive to this.
 
 %% -------------------------------------------------------------------
 \subsection{A8: Accounting for seats inside}
@@ -237,7 +251,9 @@ Does the link between distance from the Orloj and the number of ratings hold onc
 \label{fig:a8}
 \end{figure}
 
-\yourwords{The slope before and after, how much remains, and whether it is still different from zero. The nested $F$-test and the variance inflation factor. Compare what the $F$-test and the robust $t$-test say about seats, and explain why they could differ (Table~\ref{tab:a8sens} and Figure~\ref{fig:a8diag} will help).}
+Adding seats inside reduces the slope of distance from $-327.14$ to $-229.29$ ratings per km, so 70.09\% of it remains (Table~\ref{tab:a8comp}). The slope with seats is still different from zero: robust \CI{$-408.67$}{$-49.91$}, $t$\,=\,$-2.51$, \pval{.013}, with \ncol\,=\,187 (Table~\ref{tab:reg}, Figure~\ref{fig:a8}). So when caf\'es with the same number of seats are compared, each extra km still goes with about 229 fewer ratings. The variance inflation factor of distance is 1.01, so distance and seats are almost unrelated, and the two slopes can be compared safely.
+
+The two tests disagree about seats. The nested $F$-test says that adding seats improves the model a lot (\Fstat{1}{184}{78.11}, \plt{.001}, with \textit{R}$^2$ rising from 0.04 to 0.33), but with robust standard errors the coefficient of seats is not significant (38.34 ratings per seat, \CI{$-16.61$}{93.29}, \pval{.173}). The $F$-test assumes constant variance, and the Breusch--Pagan test rejects this here (\plt{.001}). The diagnostic plots (Figure~\ref{fig:a8diag}) show why: two caf\'es have very large Cook's distances, Caf\'e Louvre (8.53), with 23,951 ratings and 200 seats, and VNITROBLOCK (5.73), with 260 seats but only 1,987 ratings (Table~\ref{tab:a8infl}). Most of the apparent effect of seats rests on these few large caf\'es, and the robust standard errors take that into account. Without the five caf\'es whose Cook's distance is above $4/n$, the slope of distance is $-159.40$ ratings per km (Table~\ref{tab:a8sens}), which is still negative but smaller.
 
 %% -------------------------------------------------------------------
 \subsection{A9: East and west of the Orloj}
@@ -266,7 +282,7 @@ Does the relationship between distance from the Orloj and the number of ratings 
 \label{fig:a9}
 \end{figure}
 
-\yourwords{The interaction coefficient with its interval and exact $p$, and the slope on each side. Explain in words what the interaction term means. If it is not significant, write that there is no evidence of a difference, not that there is no difference.}
+The interaction coefficient is 477.34 ratings per km, robust \CI{$-231.32$}{1186.00}, $t$\,=\,1.32, \pval{.188}, with \ncol\,=\,187 and \textit{R}$^2$\,=\,0.06 (Table~\ref{tab:a9}). The interaction term measures how much the slope of distance changes from the west of the Orloj to the east. The slope is $-683.92$ ratings per km west of the Orloj and $-206.58$ east of it (Table~\ref{tab:a9slopes}, Figure~\ref{fig:a9}), so the drop looks steeper in the west. But the interval of the interaction includes 0, so there is no evidence that the relationship differs between east and west. The apparent difference also depends almost entirely on Caf\'e Louvre, a very popular caf\'e just west of the Orloj: without the three caf\'es whose Cook's distance is above $4/n$, the interaction falls from 477.34 to 69.49 (Table~\ref{tab:a9sens}).
 
 %% -------------------------------------------------------------------
 \subsection{A10: Probability of an above-median number of ratings}
@@ -288,14 +304,18 @@ Does the probability that a caf\'e has an above-median number of ratings change 
 \label{fig:a10}
 \end{figure}
 
-\yourwords{How the outcome was defined (the median computed in code, a caf\'e exactly on the median counts as not above it). The average marginal effect in percentage points per km with its interval as the headline, the odds ratio only as a check, and $n$.}
+The outcome is 1 if a caf\'e has more ratings than the median of all caf\'es and 0 otherwise. The median, 446 ratings, is computed in the cleaning script, and a caf\'e exactly on the median counts as not above it, so 93 caf\'es are above the median and 94 are not. On average, each extra km from the Orloj lowers the probability of an above-median number of ratings by 13.15 percentage points, \CI{$-18.02$}{$-8.29$}, with \ncol\,=\,187 (Table~\ref{tab:a10}, Figure~\ref{fig:a10}). As a check, the odds ratio is 0.55 per km, so the odds of being above the median fall by about 45\% with each km ($z$\,=\,$-5.30$, \plt{.001}). This result does not depend on a few very popular caf\'es, because the outcome only records whether a caf\'e is above the median, not by how much.
 
 %% -------------------------------------------------------------------
 \section{Discussion}
-\yourwords{What the results together say about where Prague cafes are and how busy they are, in this sample. Discuss at least: a convenience sample collected by students, observational data so no causal claims, caf\'es in the same district are not independent and how that affects every test that assumes independence, and the influence of a few very popular caf\'es. Say what a reader should and should not conclude.}
+Together, the results describe caf\'es that are on average about 2\,km from the Orloj, spread more in the east--west direction than north--south, and less busy the farther out they are. In A6 to A10 every measure points the same way: fewer ratings with more distance, whether it is measured with ranks, with raw counts, for caf\'es with the same number of seats, or as the chance of being above the median. The differences between caf\'e types are less clear: roasteries may be farther out and international chains more central, but with only 22 roasteries and 9 international chains these results are weak.
+
+The results have several limits. First, the sample is a convenience sample: students chose caf\'es they could easily reach and often already knew, and each student could include at most two international chains. Caf\'es near the centre and along students' usual routes are probably over-represented, so the results describe this sample and not all caf\'es in Prague. Second, the data are observational, so I cannot say that distance causes fewer ratings; central caf\'es differ from others in many ways, such as tourist traffic, age and fame. Third, caf\'es in the same district are not independent, because they share the same streets, visitors and rents. Every test in this report assumes independent caf\'es, so the tests treat the sample as more information than it really is, and the $p$-values and confidence intervals are probably too optimistic. Fourth, a few very popular central caf\'es, above all Caf\'e Louvre, have a large influence on the regressions: without them the slopes in A7 and A8 are clearly smaller and the interaction in A9 almost disappears.
+
+A reader should conclude that, in this sample, caf\'es farther from the Orloj have fewer Google ratings, and that this pattern holds however it is measured. A reader should not conclude that moving a caf\'e closer to the centre would bring it more ratings, or that exact numbers such as 327 ratings per km apply to all caf\'es in Prague.
 
 \section{Conclusion}
-\yourwords{A short conclusion that answers the question of this chapter of the story.}
+The caf\'es in this sample are on average about 2\,km from the Orloj and spread more east--west than north--south. Caf\'es farther from the Orloj are less busy: each km goes with an about 13 percentage points lower chance of having more ratings than the median caf\'e, and the link holds for caf\'es with the same number of seats. Caf\'e type says little about location, because the groups of roasteries and international chains are too small.
 
 %% -------------------------------------------------------------------
 \appendix
@@ -319,7 +339,11 @@ Does the probability that a caf\'e has an above-median number of ratings change 
 
 \clearpage
 \section{Distributions and normality}\label{app:dist}
-\yourwords{What the plots and checks showed: skewness, outliers and the shape within each group. Confirm from the histograms and Q--Q plots that the conclusions in Table~\ref{tab:decision} hold, in particular for roasteries, whose skewness is very close to the limit. State which test follows for each question.}
+Distance is skewed to the right for all caf\'es (skewness 1.13) and in almost every group, with a long tail of a few caf\'es far from the centre (Figures~\ref{fig:hist} and~\ref{fig:box}). The number of ratings is extremely skewed (skewness 7.83), mainly because of Caf\'e Louvre with 23,951 ratings, and seats inside is also strongly skewed (4.39). Only the east--west minus north--south difference looks roughly normal (skewness 0.41), and its Q--Q plot stays close to the line (Figure~\ref{fig:qq}).
+
+The histograms and Q--Q plots confirm the conclusions in Table~\ref{tab:decision}. For the large groups the bootstrapped means are close to symmetric (Figure~\ref{fig:boot}), so the central limit theorem applies and a parametric test is justified. Roasteries are the borderline case: their skewness is 0.53, just above the 0.5 limit, and their Q--Q plot is fairly close to the line. With only 22 roasteries the central limit theorem cannot be relied on, so I treat them as non-parametric; a $t$-test would be a defensible alternative, but the rank test is the safer choice. International chains (9 caf\'es) are clearly too few, and the number of ratings is too skewed even with 187 caf\'es.
+
+The tests that follow are: a one-sample $t$-test (A1), the Wilcoxon rank-sum test (A2), a paired $t$-test (A3), the Kruskal--Wallis test (A4), Fisher's exact test for the two categorical variables (A5), Spearman's correlation (A6), linear regression with robust standard errors (A7 to A9) and logistic regression (A10).
 
 \begin{table}[ht]
 \centering
@@ -358,7 +382,7 @@ Does the probability that a caf\'e has an above-median number of ratings change 
 
 \clearpage
 \section{Regression diagnostics}\label{app:diag}
-\yourwords{What the residual and Q--Q plots show for A7 to A9, which caf\'es are influential, and whether each conclusion survives without them.}
+In all three regressions the residuals are far from normal: the Q--Q plots bend upward on the right, because a few caf\'es have many more ratings than the model predicts (Figures~\ref{fig:a7diag}, \ref{fig:a8diag} and~\ref{fig:a9diag}). The scale--location plots show the spread of the residuals growing with the fitted values, most clearly in A8, where the Breusch--Pagan test rejects constant variance (\plt{.001}); this is why robust standard errors are used. Caf\'e Louvre (row 10) is the most influential caf\'e in every model, and in A8 VNITROBLOCK (row 26), with many seats but relatively few ratings, is also very influential. Without the caf\'es whose Cook's distance is above $4/n$, the slope in A7 goes from $-327.14$ to $-196.65$ ratings per km and the slope in A8 from $-229.29$ to $-159.40$. Both stay negative, so the direction of these conclusions survives, but the size of the effect is smaller. In A9 the interaction falls from 477.34 to 69.49, which supports the conclusion that there is no evidence of a difference between east and west.
 
 \begin{figure}[p]
 \centering
@@ -450,8 +474,9 @@ Does the probability that a caf\'e has an above-median number of ratings change 
 \end{table}
 
 \section{Reproducibility}\label{app:repro}
+\sloppy
 Run in this order from the repository root: \texttt{analysis/01\_cleaning.R}, \texttt{analysis/02\_descriptive.R}, \texttt{analysis/03\_analysis.R}. Software: R 4.6.1 with the packages dplyr, ggplot2, xtable, rstatix, car, lmtest, sandwich and marginaleffects. All bootstrap procedures use 5,000 resamples and seed 123. The random sideways spread of the points in the figures uses seed 1100.
 
-\noindent Repository: \textcolor{red!70!black}{[link to your GitHub repository]}
+\noindent Repository: \url{https://github.com/tjb0702-byte/DataAnalytics_Cafe_Project_Verto}
 
 \end{document}
